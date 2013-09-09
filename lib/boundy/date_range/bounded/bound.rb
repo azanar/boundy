@@ -1,3 +1,4 @@
+require 'boundy/date_range/comparator/bounded'
 require 'boundy/date_range/comparator/range'
 require 'boundy/date_range/comparator/time'
 
@@ -32,12 +33,15 @@ module Boundy
           @date = date
         end
 
+        @@comparators = {
+          Time => Boundy::DateRange::Comparator::Time,
+          Range => Boundy::DateRange::Comparator::Range,
+          Boundy::DateRange::Bounded => Boundy::DateRange::Comparator::Bounded
+        }
+
         def comparator(subject)
-          case subject
-          when Time
-            Boundy::DateRange::Comparator::Time.new(@date, subject)
-          when Range
-            Boundy::DateRange::Comparator::Range.new(@date, subject)
+          if @@comparators.has_key?(subject.class)
+            @@comparators[subject.class].new(@date, subject)
           else
             raise "I can't compare myself to a #{subject.inspect}"
           end
@@ -81,8 +85,10 @@ module Boundy
             other <=> self
           when Bound
             date <=> other.date
+          when Time
+            date <=> other
           else
-            raise "UGH!"
+            raise "UGH! #{other.class}"
           end
         end
 

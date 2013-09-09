@@ -1,52 +1,29 @@
-module Boundy::DateRange
-  class Bounded
-    class Bound
-      class Constrainer
-        def initialize(a, b)
-          @a = a
-          @b = b
-        end
+require 'boundy/date_range/comparator/bound'
 
-        def max
-          case @a
-          when Bound::Infinite::Above
-            @a
-          when Bound::Infinite::Below
-            @b
-          else
-            case @b
-            when Bound::Infinite::Above
-              @b
-            when Bound::Infinite::Below
+module Boundy
+  module DateRange
+    class Bounded
+      class Bound
+        class Constrainer
+          def initialize(a, b)
+            @a = a
+            @b = b
+            @comparator = Boundy::DateRange::Comparator::Bound.new(a,b)
+          end
+
+          def max
+            result = if @comparator.compare == :left
               @a
             else
-              if @a < @b
-                @b
-              else
-                @a
-              end
+              @b
             end
           end
-        end
 
-        def min
-          case @a
-          when Bound::Infinite::Above
-            @b
-          when Bound::Infinite::Below
-            @a
-          else
-            case @b
-            when Bound::Infinite::Above
+          def min
+            result = if @comparator.compare == :right
               @a
-            when Bound::Infinite::Below
-              @b
             else
-              if @a < @b
-                @a
-              else
-                @b
-              end
+              @b
             end
           end
         end
@@ -54,4 +31,3 @@ module Boundy::DateRange
     end
   end
 end
-
