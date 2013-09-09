@@ -1,12 +1,20 @@
-require File.expand_path('../test_helper', __FILE__)
+require File.expand_path('../../../test_helper', __FILE__)
 
 require 'boundy/date_range/bounded'
 
-class DateRange::BoundedTest < ActiveSupport::TestCase
+class Boundy::DateRange::BoundedTest < ActiveSupport::TestCase
   setup do
-    @before = 5.days.ago
-    @after = 2.days.ago
-    @range = DateRange::Bounded.new(@before, @after)
+    @now = Time.now
+    @before = @now - 5.days
+
+    @tighter_before = @now - 4.days
+    @looser_before = @now - 6.days
+
+    @after = @now - 2.days
+    @tighter_after = @now - 3.days
+    @looser_after = @now - 1.days
+
+    @range = Boundy::DateRange::Bounded.new(@before, @after)
   end
 
   test '#in_range? within' do
@@ -29,109 +37,77 @@ class DateRange::BoundedTest < ActiveSupport::TestCase
     assert(@range.in_range?(7.days.ago .. 6.day.ago) == false)
   end
 
-  test '#partially_within? strictly before' do
-    other_range = DateRange::Bounded.new(7.days.ago, 6.days.ago)
-
-    assert @range.partially_within?(other_range) == false
-  end
-
-  test '#partially_within? strictly after' do
-    other_range = DateRange::Bounded.new(1.days.ago, 1.days.ago)
-
-    assert @range.partially_within?(other_range) == false
-
-  end
-
-  test '#partially_within? strictly equal' do
-    other_range = DateRange::Bounded.new(@before, @after)
-
-    assert @range.partially_within?(other_range) == false
-
-  end
-
-  test '#partially_within? over-reach after' do
-    other_range = DateRange::Bounded.new(5.days.ago, 1.days.ago)
-
-    assert @range.partially_within?(other_range) == true
-  end
-
-  test '#partially_within? under-reach before' do
-    other_range = DateRange::Bounded.new(4.days.ago, 2.days.ago)
-
-    assert @range.partially_within?(other_range) == true
-
-  end
-
-  test '#partially_within? under-reach after' do
-    other_range = DateRange::Bounded.new(5.days.ago, 3.days.ago)
-
-    assert @range.partially_within?(other_range) == true
-  end
-
-  test '#partially_within? over-reach before over-reach after' do
-    other_range = DateRange::Bounded.new(6.days.ago, 1.days.ago)
-
-    assert @range.partially_within?(other_range) == true
-  end
-
-  test '#partially_within? over-reach before under-reach after' do
-    other_range = DateRange::Bounded.new(6.days.ago, 3.days.ago)
-
-    assert @range.partially_within?(other_range) == true
-  end
-
-  test '#partially_within? under-reach before under-reach after' do
-    other_range = DateRange::Bounded.new(4.days.ago, 3.days.ago)
-
-    assert @range.partially_within?(other_range) == true
-  end
-
-  test '#partially_within? under-reach before over-reach after' do
-    other_range = DateRange::Bounded.new(4.days.ago, 1.days.ago)
-
-    assert @range.partially_within?(other_range) == true
-  end
-
-  test '#<=> lesser self' do
-    other_range = DateRange::Bounded.new(7.days.ago, 6.days.ago)
-
-    result = (@range <=> other_range)
-    assert result == -1
-  end
-
-  test '#<=> equal self' do
-    other_range = DateRange::Bounded.new(@before, @after)
-
-    result = (@range <=> other_range)
-    assert result == 0, "#{result}"
-
-  end
-
-  test '#<=> greater self' do
-    other_range = DateRange::Bounded.new(1.days.ago, 1.days.ago)
-
-    result = (@range <=> other_range)
-    assert result == 1, "#{result}"
-  end
-
   test '#utc' do
-    new_range = @range.utc
+    @range.utc
   end
 
   test '#in_time_zone' do
-    new_range = @range.in_time_zone("PST8PDT")
+    @range.in_time_zone("PST8PDT")
   end
 
   test '#to_midnight' do
-    new_range = @range.to_midnight
+    @range.to_midnight
+  end
+
+  test 'constrain_to date_bound equal' do
+    new = Boundy::DateRange::Bounded.new(@before, @after)
+
+    result = @range.constrain_to(new)
+
+    assert_equal @before, result.from.date
+    assert_equal @after, result.to.date
+  end
+
+  test 'constrain_to date_bound tighter' do
+    new = Boundy::DateRange::Bounded.new(@tighter_before, @tighter_after)
+
+    result = @range.constrain_to(new)
+
+    assert_equal @tighter_before, result.from.date
+    assert_equal @tighter_after, result.to.date
+  end
+
+  test 'constrain_to date_bound loserr' do
+    new = Boundy::DateRange::Bounded.new(@looser_before, @looser_after)
+
+    result = @range.constrain_to(new)
+
+    assert_equal @before, result.from.date
+    assert_equal @after, result.to.date
+  end
+
+  test 'constrain_to range equal' do
+    range = (@before .. @after)
+
+    result = @range.constrain_to(range)
+
+    assert_equal @before, result.from.date
+    assert_equal @after, result.to.date
+  end
+  test 'constrain_to range tighter' do
+    range = (@tighter_before .. @tighter_after)
+
+    result = @range.constrain_to(range)
+
+    assert_equal @tighter_before, result.from.date
+    assert_equal @tighter_after, result.to.date
+  end
+
+  test 'constrain_to range looser' do
+    range = (@looser_before .. @looser_after)
+
+    result = @range.constrain_to(range)
+
+    assert_equal @before, result.from.date
+    assert_equal @after, result.to.date
   end
 end
 
-class DateRange::Bounded::MidnightAlignedTest < ActiveSupport::TestCase
+class Boundy::DateRange::Bounded::DayAlignedTest < ActiveSupport::TestCase
   setup do
     @before = 5.days.ago
     @after = 2.days.ago
-    @bound = DateRange::Bounded::MidnightAligned.new(@before,@after)
+    @bound = Boundy::DateRange::Bounded::DayAligned.new(@before,@after)
   end
 
   test "aligns to the right anterior midnight" do

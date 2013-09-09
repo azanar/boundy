@@ -1,4 +1,4 @@
-module DateRange
+module Boundy::DateRange
   module Comparator
     class Time
       def initialize(date, subject)

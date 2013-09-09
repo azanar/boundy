@@ -1,78 +1,95 @@
-module DateRange
-  class Bounded
-    class Bound
-      class MidnightAligned < Bound
+require 'boundy/date_range/comparator/range'
+require 'boundy/date_range/comparator/time'
+
+module Boundy
+  module DateRange
+    class Bounded
+      class Bound
+        module DayAligned
+          class Beginning < Bound
+            def initialize(date)
+              if date.nil?
+                raise
+              end
+              @date = date.beginning_of_day
+            end
+          end
+
+          class End < Bound
+            def initialize(date)
+              if date.nil?
+                raise
+              end
+              @date = date.end_of_day
+            end
+          end
+        end
+
         def initialize(date)
           if date.nil?
-            raise
+            raise "Date passed is nil!"
           end
-          @date = date.beginning_of_day
+          @date = date
         end
-      end
 
-      def initialize(date)
-        if date.nil?
-          raise
+        def comparator(subject)
+          case subject
+          when Time
+            Boundy::DateRange::Comparator::Time.new(@date, subject)
+          when Range
+            Boundy::DateRange::Comparator::Range.new(@date, subject)
+          else
+            raise "I can't compare myself to a #{subject.inspect}"
+          end
         end
-        @date = date
-      end
 
-      def constrainer(subject)
-        case subject
-        when Range
-           DateRange::Constrainer::Range.new(@date, subject)
-        when DateRange::Bounded
-           DateRange::Constrainer::Bounded.new(@date, subject)
-        else
-          raise "What the fuck kind of subject is #{subject.class}"
+        def after?(subject)
+          comparator(subject).after?
         end
-      end
 
-      def comparator(subject)
-        case subject
-        when Time
-           DateRange::Comparator::Time.new(@date, subject)
-        when Range
-           DateRange::Comparator::Range.new(@date, subject)
-        else
-          raise "What the fuck kind of subject is #{subject.class}"
+        def before?(subject)
+          comparator(subject).before?
         end
-      end
 
-      def constrain_to(subject)
-        constrainer(subject).constrain
-      end
+        def within?(subject)
+          comparator(subject).within?
+        end
 
-      def after?(subject)
-        comparator(subject).after?
-      end
+        def in_time_zone(tz)
+          self.class.new(@date.in_time_zone(tz))
+        end
 
-      def before?(subject)
-        comparator(subject).before?
-      end
+        def beginning_of_day
+          DayAligned::Beginning.new(@date)
+        end
 
-      def within?(subject)
-        comparator(subject).within?
-      end
+        def end_of_day
+          DayAligned::End.new(@date)
+        end
 
-      def in_time_zone(tz)
-        self.class.new(@date.in_time_zone(tz))
-      end
+        def utc
+          self.class.new(@date.utc)
+        end
 
-      def to_midnight
-        self.const_get(:MidnightAligned).new(@date)
-      end
+        attr_reader :date
 
-      def utc
-        self.class.new(@date.utc)
-      end
+        include Comparable
 
-      attr_reader :date
+        def <=>(other)
+          case other
+          when Bound::Infinite
+            other <=> self
+          when Bound
+            date <=> other.date
+          else
+            raise "UGH!"
+          end
+        end
 
-      def to_sql_timestamp
-        @date.strftime("%Y-%m-%d %H:%M:%S")
+        def to_sql_timestamp
+          @date.strftime("%Y-%m-%d %H:%M:%S")
+        end
       end
     end
   end
 end
-

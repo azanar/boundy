@@ -1,6 +1,7 @@
 require 'boundy/date_range/bounded/bound'
+require 'boundy/date_range/bounded/bound/infinite' 
 
-module DateRange
+module Boundy::DateRange
   class Bounded
     # An Anterior bounded date has a beginning, but no end -- hence, is
     # anterior-bounded.
@@ -17,7 +18,7 @@ module DateRange
                   else
                     raise
                   end
-          @to = Bound::Infinite.new
+          @to = Bound::Infinite::Above.new
         end
       end
 
@@ -34,11 +35,11 @@ module DateRange
                 else
                   raise
                 end
-        @to = Bound::Infinite.new
+        @to = Bound::Infinite::Above.new
       end
 
       def to_sql_clause
-        ">= #{to_sql_timestamp}"
+        ">= '#{@from.to_sql_timestamp}'"
       end
     end
   end

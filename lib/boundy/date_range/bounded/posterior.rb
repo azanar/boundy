@@ -1,6 +1,7 @@
 require 'boundy/date_range/bounded/bound'
+require 'boundy/date_range/bounded/bound/infinite' 
 
-module DateRange
+module Boundy::DateRange
   class Bounded
     class Posterior < Bounded
       class MidnightAligned < Posterior
@@ -9,7 +10,7 @@ module DateRange
             raise
           end
 
-          @from = Bound::Infinite.new
+          @from = Bound::Infinite::Below.new
           @to = case date
                   when Time
                     Bound.new(date.end_of_day)
@@ -26,7 +27,7 @@ module DateRange
           raise
         end
 
-        @from = Bound::Infinite.new
+        @from = Bound::Infinite::Below.new
         @to = case date
                 when Time
                   Bound.new(date)
@@ -38,7 +39,7 @@ module DateRange
       end
 
       def to_sql_clause
-        "<= #{to_sql_timestamp}"
+        "<= '#{@to.to_sql_timestamp}'"
       end
     end
   end
