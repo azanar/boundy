@@ -34,35 +34,9 @@ module Boundy
       def to_sql_timestamp
         raise "You shouldn't be calling me!"
       end
-      class Above < Infinite
-        include Comparable
-        def max_of(other)
-          self
-        end
-
-        def min_of(other)
-          other
-        end
-
-        def <=>(other)
-          -1 
-        end
-      end
-
-      class Below < Infinite
-        include Comparable
-        def max_of(other)
-          other
-        end
-
-        def min_of(other)
-          self
-        end
-
-        def <=>(other)
-          1
-        end
-      end
     end
   end
 end
+
+require 'boundy/bound/infinite/above'
+require 'boundy/bound/infinite/below'
