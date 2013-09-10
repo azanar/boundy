@@ -1,29 +1,32 @@
 require 'active_support/time'
 
+require 'boundy/bound'
+require 'boundy/bound/infinite'
+
 require 'boundy/date_range/bounded/anterior'
 require 'boundy/date_range/bounded/posterior'
 
-require 'boundy/date_range/bounded/constrainer/bounded'
-require 'boundy/date_range/bounded/constrainer/range'
+require 'boundy/date_range/bounded/constrainer'
+require 'boundy/range/constrainer'
 
 module Boundy::DateRange
   class Bounded
     class DayAligned < Boundy::DateRange::Bounded
       def beginning_bound_class
-        Bound::DayAligned::Beginning
+        Boundy::Bound::DayAligned::Beginning
       end
 
       def ending_bound_class
-        Bound::DayAligned::End
+        Boundy::Bound::DayAligned::End
       end
     end
 
     def initialize(b,e=nil)
       case b
-      when Bound
+      when Boundy::Bound
         @from = b
         @to = e
-      when Bound::Infinite::Below
+      when Boundy::Bound::Infinite::Below
         @from = b
         @to = e
       when Time
@@ -42,7 +45,7 @@ module Boundy::DateRange
     end
 
     def bound_class
-      Bound
+      Boundy::Bound
     end
 
     alias :beginning_bound_class :bound_class
@@ -81,9 +84,9 @@ module Boundy::DateRange
     def constrainer(subject)
       case subject
       when Range
-         Boundy::DateRange::Bounded::Constrainer::Range.new(self, subject)
+         Boundy::Range::Constrainer.new(self, subject)
       when Boundy::DateRange::Bounded
-         Boundy::DateRange::Bounded::Constrainer::Bounded.new(self, subject)
+         Boundy::DateRange::Bounded::Constrainer.new(self, subject)
       else
         raise "I can't constrain myself against a #{subject.inspect}"
       end

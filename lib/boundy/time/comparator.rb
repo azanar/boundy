@@ -1,6 +1,6 @@
-module Boundy::DateRange
-  module Comparator
-    class Time
+module Boundy
+  class Time
+    class Comparator
       def initialize(date, subject)
         @date = date
         @subject = subject

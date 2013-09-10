@@ -1,10 +1,10 @@
 require 'ostruct'
 
-require File.expand_path('../../../../test_helper', __FILE__)
+require File.expand_path('../../../test_helper', __FILE__)
 
-require 'boundy/date_range/comparator/time'
+require 'boundy/time/comparator'
 
-class Boundy::DateRange::Comparator::TimeTest < ActiveSupport::TestCase
+class Boundy::Time::ComparatorTest < ActiveSupport::TestCase
   @@bound = 5.days.ago
 
   bounds = [
@@ -30,7 +30,7 @@ class Boundy::DateRange::Comparator::TimeTest < ActiveSupport::TestCase
 
   cases.each do |c|
     test "##{c[:method]}_#{c[:truthiness]}" do
-      comp = Boundy::DateRange::Comparator::Time.new(@@bound, c[:time])
+      comp = Boundy::Time::Comparator.new(@@bound, c[:time])
 
       assert_equal c[:expected], comp.send(c[:method])
     end

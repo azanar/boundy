@@ -1,6 +1,5 @@
-require 'boundy/date_range/bounded'
-require 'boundy/date_range/bounded/bound'
-require 'boundy/date_range/bounded/bound/infinite' 
+require 'boundy/bound'
+require 'boundy/bound/infinite' 
 
 module Boundy::DateRange
   class Bounded
@@ -11,11 +10,11 @@ module Boundy::DateRange
             raise
           end
 
-          @from = Bound::Infinite::Below.new
+          @from = Boundy::Bound::Infinite::Below.new
           @to = case date
                   when Time
-                    Bound.new(date.end_of_day)
-                  when Bound
+                    Boundy::Bound.new(date.end_of_day)
+                  when Boundy::Bound
                     date.dup
                   else
                     raise
@@ -28,11 +27,11 @@ module Boundy::DateRange
           raise
         end
 
-        @from = Bound::Infinite::Below.new
+        @from = Boundy::Bound::Infinite::Below.new
         @to = case date
                 when Time
-                  Bound.new(date)
-                when Bound
+                  Boundy::Bound.new(date)
+                when Boundy::Bound
                   date.dup
                 else
                   raise

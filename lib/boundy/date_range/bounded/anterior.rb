@@ -1,5 +1,6 @@
-require 'boundy/date_range/bounded/bound'
-require 'boundy/date_range/bounded/bound/infinite' 
+require 'boundy/date_range/bounded'
+require 'boundy/bound'
+require 'boundy/bound/infinite' 
 
 module Boundy::DateRange
   class Bounded
@@ -14,11 +15,11 @@ module Boundy::DateRange
 
           @from = case date
                   when Time
-                    Bound.new(date.beginning_of_day)
+                    Boundy::Bound.new(date.beginning_of_day)
                   else
                     raise
                   end
-          @to = Bound::Infinite::Above.new
+          @to = Boundy::Bound::Infinite::Above.new
         end
       end
 
@@ -29,13 +30,13 @@ module Boundy::DateRange
 
         @from = case date
                 when Time
-                  Bound.new(date)
-                when Bound
+                  Boundy::Bound.new(date)
+                when Boundy::Bound
                   date.dup
                 else
                   raise
                 end
-        @to = Bound::Infinite::Above.new
+        @to = Boundy::Bound::Infinite::Above.new
       end
 
       def to_sql_clause

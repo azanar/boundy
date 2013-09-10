@@ -1,7 +1,7 @@
 module Boundy
   module DateRange
-    module Comparator
-      class Bounded
+    class Bounded
+      class Comparator
         def initialize(date, subject)
           @date = date
           @subject = subject
