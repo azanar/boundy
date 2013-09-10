@@ -1,10 +1,11 @@
+require 'boundy/date_range/bounded'
 require 'boundy/date_range/bounded/bound'
 require 'boundy/date_range/bounded/bound/infinite' 
 
 module Boundy::DateRange
   class Bounded
     class Posterior < Bounded
-      class MidnightAligned < Posterior
+      class MidnightAligned < Boundy::DateRange::Bounded::Posterior
         def initialize(date)
           if date.nil?
             raise

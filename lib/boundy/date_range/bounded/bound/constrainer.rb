@@ -12,7 +12,7 @@ module Boundy
           end
 
           def max
-            result = if @comparator.compare == :left
+            if @comparator.compare == :left
               @a
             else
               @b
@@ -20,7 +20,7 @@ module Boundy
           end
 
           def min
-            result = if @comparator.compare == :right
+            if @comparator.compare == :right
               @a
             else
               @b

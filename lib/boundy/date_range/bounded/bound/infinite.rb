@@ -29,7 +29,7 @@ module Boundy::DateRange
         end
 
         def <=>(other)
-          raise "FOO! #{self.class} #{other.class}"
+          raise ""
         end
 
         def to_sql_timestamp
@@ -38,12 +38,10 @@ module Boundy::DateRange
         class Above < Infinite
           include Comparable
           def max_of(other)
-            puts "ABOVE MAX_OF #{self.inspect} #{other.inspect}"
             self
           end
 
           def min_of(other)
-            puts "ABOVE MIN_OF #{self.inspect} #{other.inspect}"
             other
           end
 
@@ -55,12 +53,10 @@ module Boundy::DateRange
         class Below < Infinite
           include Comparable
           def max_of(other)
-            puts "BELOW MAX_OF #{self.inspect} #{other.inspect}"
             other
           end
 
           def min_of(other)
-            puts "BELOW MIN_OF #{self.inspect} #{other.inspect}"
             self
           end
           
