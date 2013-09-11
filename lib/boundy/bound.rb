@@ -1,46 +1,32 @@
-require 'boundy/date_range/bounded'
-require 'boundy/date_range/bounded/comparator'
+require 'boundy/bounded'
+require 'boundy/bounded/anterior'
+require 'boundy/bounded/posterior'
+require 'boundy/bounded/comparator'
 require 'boundy/range/comparator'
 require 'boundy/time/comparator'
 
 module Boundy
   class Bound
-    module DayAligned
-      class Beginning < Bound
-        def initialize(date)
-          if date.nil?
-            raise
-          end
-          @date = date.beginning_of_day
-        end
+    def initialize(datum)
+      if datum.nil?
+        raise "Datum passed is nil!"
       end
-
-      class End < Bound
-        def initialize(date)
-          if date.nil?
-            raise
-          end
-          @date = date.end_of_day
-        end
-      end
-    end
-
-    def initialize(date)
-      if date.nil?
-        raise "Date passed is nil!"
-      end
-      @date = date
+      @datum = datum
     end
 
     @@comparators = {
-      Time => Boundy::Time::Comparator,
+      ::Time => Boundy::Time::Comparator,
       ::Range => Boundy::Range::Comparator,
-      Boundy::DateRange::Bounded => Boundy::DateRange::Bounded::Comparator
+      Boundy::Bounded::Anterior => Boundy::DateRange::Bounded::Comparator,
+      Boundy::Bounded::Posterior => Boundy::DateRange::Bounded::Comparator,
+      Boundy::Bounded::Anterior::MidnightAligned => Boundy::DateRange::Bounded::Comparator,
+      Boundy::Bounded::Posterior::MidnightAligned => Boundy::DateRange::Bounded::Comparator,
+      Boundy::Bounded => Boundy::DateRange::Bounded::Comparator
     }
 
     def comparator(subject)
       if @@comparators.has_key?(subject.class)
-        @@comparators[subject.class].new(@date, subject)
+        @@comparators[subject.class].new(@datum, subject)
       else
         raise "I can't compare myself to a #{subject.class}: #{subject.inspect}"
       end
@@ -58,41 +44,26 @@ module Boundy
       comparator(subject).within?
     end
 
-    def in_time_zone(tz)
-      self.class.new(@date.in_time_zone(tz))
-    end
 
-    def beginning_of_day
-      DayAligned::Beginning.new(@date)
-    end
-
-    def end_of_day
-      DayAligned::End.new(@date)
-    end
-
-    def utc
-      self.class.new(@date.utc)
-    end
-
-    attr_reader :date
+    attr_reader :datum
 
     include Comparable
 
     def <=>(other)
       case other
-      when Bound::Infinite
+      when Boundy::Bound::Infinite
         other <=> self
-      when Bound
-        date <=> other.date
-      when Time
-        date <=> other
+      when Boundy::Bound
+        datum <=> other.datum
+      when ::Time
+        datum <=> other
       else
         raise "UGH! #{other.class}"
       end
     end
 
     def to_sql_timestamp
-      @date.strftime("%Y-%m-%d %H:%M:%S")
+      @datum.strftime("%Y-%m-%d %H:%M:%S")
     end
   end
 end

@@ -1,6 +1,6 @@
 require 'boundy/bound/constrainer'
 
-module Boundy::DateRange
+module Boundy
   class Bounded
     class Constrainer
       def initialize(bounded, subject)
@@ -12,7 +12,7 @@ module Boundy::DateRange
         from = Boundy::Bound::Constrainer.new(@bounded.from, @subject.from)
         to = Boundy::Bound::Constrainer.new(@bounded.to, @subject.to)
 
-        Boundy::DateRange::Bounded.new(from.max, to.min)
+        Boundy::Bounded.new(from.max, to.min)
       end
     end
   end

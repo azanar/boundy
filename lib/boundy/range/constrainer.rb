@@ -1,13 +1,13 @@
-require 'boundy/date_range/bounded'
-require 'boundy/date_range/bounded/constrainer'
+require 'boundy/bounded'
+require 'boundy/bounded/constrainer'
 
 module Boundy
   class Range
     class Constrainer
       def initialize(bounded, range)
         @bounded = bounded
-        subject = Boundy::DateRange::Bounded.new(range.begin, range.end)
-        @constrainer = Boundy::DateRange::Bounded::Constrainer.new(@bounded, subject)
+        subject = Boundy::Bounded.new(range.begin, range.end)
+        @constrainer = Boundy::Bounded::Constrainer.new(@bounded, subject)
       end
 
       def constrain

@@ -3,24 +3,14 @@ require 'active_support/time'
 require 'boundy/bound'
 require 'boundy/bound/infinite'
 
-require 'boundy/date_range/bounded/anterior'
-require 'boundy/date_range/bounded/posterior'
+require 'boundy/bounded/anterior'
+require 'boundy/bounded/posterior'
 
-require 'boundy/date_range/bounded/constrainer'
+require 'boundy/bounded/constrainer'
 require 'boundy/range/constrainer'
 
-module Boundy::DateRange
+module Boundy
   class Bounded
-    class DayAligned < Boundy::DateRange::Bounded
-      def beginning_bound_class
-        Boundy::Bound::DayAligned::Beginning
-      end
-
-      def ending_bound_class
-        Boundy::Bound::DayAligned::End
-      end
-    end
-
     def initialize(b,e=nil)
       case b
       when Boundy::Bound
@@ -29,7 +19,7 @@ module Boundy::DateRange
       when Boundy::Bound::Infinite::Below
         @from = b
         @to = e
-      when Time
+      when ::Time
         @from = beginning_bound_class.new(b)
         @to = ending_bound_class.new(e)
       when Range
@@ -51,18 +41,6 @@ module Boundy::DateRange
     alias :beginning_bound_class :bound_class
     alias :ending_bound_class :bound_class
 
-    def utc
-      self.class.new(from.utc, to.utc)
-    end
-
-    def in_time_zone(tz)
-      self.class.new(from.in_time_zone(tz), to.in_time_zone(tz))
-    end
-
-    def to_midnight
-      DayAligned.new(from, to)
-    end
-
     attr_reader :from
     attr_reader :to
 
@@ -83,10 +61,10 @@ module Boundy::DateRange
 
     def constrainer(subject)
       case subject
-      when Range
+      when ::Range
          Boundy::Range::Constrainer.new(self, subject)
-      when Boundy::DateRange::Bounded
-         Boundy::DateRange::Bounded::Constrainer.new(self, subject)
+      when Boundy::Bounded
+         Boundy::Bounded::Constrainer.new(self, subject)
       else
         raise "I can't constrain myself against a #{subject.inspect}"
       end
@@ -105,6 +83,7 @@ module Boundy::DateRange
     end
 
     def within?(subject)
+      puts "within? #{subject.inspect}"
       @from.within?(subject) || @from.after?(subject) and
       @to.within?(subject) || @to.before?(subject)
     end
