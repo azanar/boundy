@@ -1,13 +1,13 @@
-require 'boundy/bounded'
-require 'boundy/bounded/constrainer'
+require 'boundy/domain'
+require 'boundy/domain/constrainer'
 
 module Boundy
   class Range
     class Constrainer
-      def initialize(bounded, range)
-        @bounded = bounded
-        subject = Boundy::Bounded.new(range.begin, range.end)
-        @constrainer = Boundy::Bounded::Constrainer.new(@bounded, subject)
+      def initialize(domain, range)
+        @domain = domain
+        subject = Boundy::Domain.new(range.begin, range.end)
+        @constrainer = Boundy::Domain::Constrainer.new(@domain, subject)
       end
 
       def constrain

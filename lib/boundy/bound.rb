@@ -1,7 +1,7 @@
-require 'boundy/bounded'
-require 'boundy/bounded/anterior'
-require 'boundy/bounded/posterior'
-require 'boundy/bounded/comparator'
+require 'boundy/domain'
+require 'boundy/domain/anterior'
+require 'boundy/domain/posterior'
+require 'boundy/domain/comparator'
 require 'boundy/range/comparator'
 require 'boundy/time/comparator'
 
@@ -17,11 +17,11 @@ module Boundy
     @@comparators = {
       ::Time => Boundy::Time::Comparator,
       ::Range => Boundy::Range::Comparator,
-      Boundy::Bounded::Anterior => Boundy::DateRange::Bounded::Comparator,
-      Boundy::Bounded::Posterior => Boundy::DateRange::Bounded::Comparator,
-      Boundy::Bounded::Anterior::MidnightAligned => Boundy::DateRange::Bounded::Comparator,
-      Boundy::Bounded::Posterior::MidnightAligned => Boundy::DateRange::Bounded::Comparator,
-      Boundy::Bounded => Boundy::DateRange::Bounded::Comparator
+      Boundy::Domain::Anterior => Boundy::Domain::Comparator,
+      Boundy::Domain::Posterior => Boundy::Domain::Comparator,
+      Boundy::Domain::Anterior::MidnightAligned => Boundy::Domain::Comparator,
+      Boundy::Domain::Posterior::MidnightAligned => Boundy::Domain::Comparator,
+      Boundy::Domain => Boundy::Domain::Comparator
     }
 
     def comparator(subject)

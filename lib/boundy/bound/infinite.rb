@@ -1,6 +1,6 @@
 module Boundy
-  # An Anterior bounded date has a beginning, but no end -- hence, is
-  # anterior-bounded.
+  # An Anterior domain date has a beginning, but no end -- hence, is
+  # anterior-domain.
   class Bound
     class Infinite
       def after?(date_range)

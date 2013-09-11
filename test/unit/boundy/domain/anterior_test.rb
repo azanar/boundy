@@ -1,9 +1,9 @@
 require File.expand_path('../../../test_helper', __FILE__)
 
-require 'boundy/bounded'
-require 'boundy/bounded/anterior'
+require 'boundy/domain'
+require 'boundy/domain/anterior'
 
-class Boundy::Bounded::AnteriorTest < ActiveSupport::TestCase
+class Boundy::Domain::AnteriorTest < ActiveSupport::TestCase
   setup do
     @now = Time.now
 
@@ -18,11 +18,11 @@ class Boundy::Bounded::AnteriorTest < ActiveSupport::TestCase
 
     @datum = @before
 
-    @range = Boundy::Bounded::Anterior.new(@datum)
+    @range = Boundy::Domain::Anterior.new(@datum)
   end
 
   test 'constrain_to datum_bound equal' do
-    new = Boundy::Bounded.new(@before, @after)
+    new = Boundy::Domain.new(@before, @after)
 
     result = @range.constrain_to(new)
 
@@ -31,7 +31,7 @@ class Boundy::Bounded::AnteriorTest < ActiveSupport::TestCase
   end
 
   test 'constrain_to datum_bound tighter' do
-    new = Boundy::Bounded.new(@tighter_before, @tighter_after)
+    new = Boundy::Domain.new(@tighter_before, @tighter_after)
 
     result = @range.constrain_to(new)
 
@@ -40,7 +40,7 @@ class Boundy::Bounded::AnteriorTest < ActiveSupport::TestCase
   end
 
   test 'constrain_to datum_bound loserr' do
-    new = Boundy::Bounded.new(@looser_before, @looser_after)
+    new = Boundy::Domain.new(@looser_before, @looser_after)
 
     result = @range.constrain_to(new)
 

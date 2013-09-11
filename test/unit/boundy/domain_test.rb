@@ -1,8 +1,8 @@
 require File.expand_path('../../test_helper', __FILE__)
 
-require 'boundy/bounded'
+require 'boundy/domain'
 
-class Boundy::BoundedTest < ActiveSupport::TestCase
+class Boundy::DomainTest < ActiveSupport::TestCase
   setup do
     @now = Time.now
     @before = @now - 5.days
@@ -14,7 +14,7 @@ class Boundy::BoundedTest < ActiveSupport::TestCase
     @tighter_after = @now - 3.days
     @looser_after = @now - 1.days
 
-    @range = Boundy::Bounded.new(@before, @after)
+    @range = Boundy::Domain.new(@before, @after)
   end
 
   test '#in_range? within' do
@@ -38,7 +38,7 @@ class Boundy::BoundedTest < ActiveSupport::TestCase
   end
 
   test 'constrain_to datum_bound equal' do
-    new = Boundy::Bounded.new(@before, @after)
+    new = Boundy::Domain.new(@before, @after)
 
     result = @range.constrain_to(new)
 
@@ -47,7 +47,7 @@ class Boundy::BoundedTest < ActiveSupport::TestCase
   end
 
   test 'constrain_to datum_bound tighter' do
-    new = Boundy::Bounded.new(@tighter_before, @tighter_after)
+    new = Boundy::Domain.new(@tighter_before, @tighter_after)
 
     result = @range.constrain_to(new)
 
@@ -56,7 +56,7 @@ class Boundy::BoundedTest < ActiveSupport::TestCase
   end
 
   test 'constrain_to datum_bound loserr' do
-    new = Boundy::Bounded.new(@looser_before, @looser_after)
+    new = Boundy::Domain.new(@looser_before, @looser_after)
 
     result = @range.constrain_to(new)
 
@@ -91,11 +91,11 @@ class Boundy::BoundedTest < ActiveSupport::TestCase
   end
 end
 
-class Boundy::Bounded::DayAlignedTest < ActiveSupport::TestCase
+class Boundy::Domain::DayAlignedTest < ActiveSupport::TestCase
   setup do
     @before = 5.days.ago
     @after = 2.days.ago
-    @bound = Boundy::Bounded::DayAligned.new(@before,@after)
+    @bound = Boundy::Domain::DayAligned.new(@before,@after)
   end
 
   test "aligns to the right anterior midnight" do

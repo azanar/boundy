@@ -3,14 +3,14 @@ require 'active_support/time'
 require 'boundy/bound'
 require 'boundy/bound/infinite'
 
-require 'boundy/bounded/anterior'
-require 'boundy/bounded/posterior'
+require 'boundy/domain/anterior'
+require 'boundy/domain/posterior'
 
-require 'boundy/bounded/constrainer'
+require 'boundy/domain/constrainer'
 require 'boundy/range/constrainer'
 
 module Boundy
-  class Bounded
+  class Domain
     def initialize(b,e=nil)
       case b
       when Boundy::Bound
@@ -63,8 +63,8 @@ module Boundy
       case subject
       when ::Range
          Boundy::Range::Constrainer.new(self, subject)
-      when Boundy::Bounded
-         Boundy::Bounded::Constrainer.new(self, subject)
+      when Boundy::Domain
+         Boundy::Domain::Constrainer.new(self, subject)
       else
         raise "I can't constrain myself against a #{subject.inspect}"
       end

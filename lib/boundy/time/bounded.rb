@@ -1,6 +1,6 @@
 module Boundy
   class Time
-    class Bounded
+    class Range
 
       def utc
         self.class.new(from.utc, to.utc)

@@ -2,8 +2,8 @@ require 'boundy/bound'
 require 'boundy/bound/infinite' 
 
 module Boundy
-  class Bounded
-    class Posterior < Bounded
+  class Domain
+    class Posterior < Domain
       class MidnightAligned < Posterior
         def initialize(date)
           if date.nil?

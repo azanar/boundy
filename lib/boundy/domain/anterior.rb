@@ -1,12 +1,12 @@
-require 'boundy/bounded'
+require 'boundy/domain'
 require 'boundy/bound'
 require 'boundy/bound/infinite' 
 
 module Boundy
-  class Bounded
-    # An Anterior bounded datum has a beginning, but no end -- hence, is
-    # anterior-bounded.
-    class Anterior < Bounded
+  class Domain
+    # An Anterior domain datum has a beginning, but no end -- hence, is
+    # anterior-domain.
+    class Anterior < Domain
       class MidnightAligned < Anterior
         def initialize(datum)
           if datum.nil?
