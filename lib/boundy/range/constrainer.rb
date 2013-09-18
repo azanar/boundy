@@ -5,9 +5,8 @@ module Boundy
   class Range
     class Constrainer
       def initialize(domain, range)
-        @domain = domain
-        subject = Boundy::Domain.new(range.begin, range.end)
-        @constrainer = Boundy::Domain::Constrainer.new(@domain, subject)
+        other = Boundy::Domain.new(range.begin, range.end)
+        @constrainer = Boundy::Domain::Constrainer.new(domain, other)
       end
 
       def constrain

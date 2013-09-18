@@ -1,49 +1,41 @@
-require 'boundy/domain'
-require 'boundy/domain/anterior'
-require 'boundy/domain/posterior'
-require 'boundy/domain/comparator'
-require 'boundy/range/comparator'
-require 'boundy/time/comparator'
+require 'boundy/bound'
+require 'boundy/bound/infinite'
+require 'boundy/comparators'
+
+#require 'manacle/proxy'
 
 module Boundy
   class Bound
     def initialize(datum)
+      if datum.class <= self.class
+        raise "Datum is a Bound already!"
+      end
+
       if datum.nil?
         raise "Datum passed is nil!"
       end
       @datum = datum
     end
 
-    @@comparators = {
-      ::Time => Boundy::Time::Comparator,
-      ::Range => Boundy::Range::Comparator,
-      Boundy::Domain::Anterior => Boundy::Domain::Comparator,
-      Boundy::Domain::Posterior => Boundy::Domain::Comparator,
-      Boundy::Domain::Anterior::MidnightAligned => Boundy::Domain::Comparator,
-      Boundy::Domain::Posterior::MidnightAligned => Boundy::Domain::Comparator,
-      Boundy::Domain => Boundy::Domain::Comparator
-    }
-
-    def comparator(subject)
-      if @@comparators.has_key?(subject.class)
-        @@comparators[subject.class].new(@datum, subject)
-      else
-        raise "I can't compare myself to a #{subject.class}: #{subject.inspect}"
-      end
-    end
-
     def after?(subject)
-      comparator(subject).after?
+      Comparators.comparator(self, subject).after?
     end
 
     def before?(subject)
-      comparator(subject).before?
+      Comparators.comparator(self, subject).before?
     end
 
     def within?(subject)
-      comparator(subject).within?
+      Comparators.comparator(self, subject).within?
     end
 
+    def inspect
+      "#<#{self.class.name} bounded at #{@datum.inspect}>"
+    end
+
+    def comparator
+      Boundy::Bound::Comparator
+    end
 
     attr_reader :datum
 
@@ -55,10 +47,8 @@ module Boundy
         other <=> self
       when Boundy::Bound
         datum <=> other.datum
-      when ::Time
-        datum <=> other
       else
-        raise "UGH! #{other.class}"
+        raise "Can not compare a Bound to a #{other.class}"
       end
     end
 

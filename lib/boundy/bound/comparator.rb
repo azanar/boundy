@@ -28,6 +28,18 @@ module Boundy
         }
       }
 
+      def before?
+        compare == :left 
+      end
+
+      def after?
+        compare == :right
+      end
+
+      def within?
+        compare == :equal
+      end
+
       def compare
         result = nil
         if COMPARISONS.has_key?(@a.class)
@@ -44,7 +56,7 @@ module Boundy
         }
 
         if result.nil?
-          map[@a <=> @b]
+          map[@a.datum <=> @b.datum]
         else
           result
         end

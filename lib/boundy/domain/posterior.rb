@@ -1,41 +1,32 @@
+require 'boundy/domain'
 require 'boundy/bound'
-require 'boundy/bound/infinite' 
+require 'boundy/bound/infinite/below' 
+
+#require 'manacle/proxy'
 
 module Boundy
   class Domain
     class Posterior < Domain
-      class MidnightAligned < Posterior
-        def initialize(date)
-          if date.nil?
-            raise
-          end
-
-          @from = Boundy::Bound::Infinite::Below.new
-          @to = case date
-                  when ::Time
-                    Boundy::Bound.new(date.end_of_day)
-                  when Boundy::Bound
-                    date.dup
-                  else
-                    raise
-                  end
-        end
-      end
-
-      def initialize(date)
-        if date.nil?
+      def initialize(datum)
+        if datum.nil?
           raise
         end
 
         @from = Boundy::Bound::Infinite::Below.new
-        @to = case date
-                when ::Time
-                  Boundy::Bound.new(date)
+        @to = case datum
                 when Boundy::Bound
-                  date.dup
+                  datum.dup
                 else
-                  raise
+                  Boundy::Bound.new(datum)
                 end
+      end
+
+      def cute
+        "[-∞, #{@to.datum}]"
+      end
+
+      def inspect
+        "#<#{self.class.name} bounded above by #{@to.inspect}>"
       end
 
       def to_sql_clause

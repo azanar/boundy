@@ -2,8 +2,6 @@ PATH
   remote: .
   specs:
     boundy (0.0.1)
-      activesupport
-      newrelic_rpm
 
 GEM
   remote: https://rubygems.org/
@@ -14,20 +12,19 @@ GEM
       multi_json (~> 1.3)
       thread_safe (~> 0.1)
       tzinfo (~> 0.3.37)
-    atomic (1.1.13)
+    atomic (1.1.14)
     i18n (0.6.5)
     metaclass (0.0.1)
     minitest (4.7.5)
     mocha (0.14.0)
       metaclass (~> 0.0.1)
     multi_json (1.8.0)
-    newrelic_rpm (3.6.7.152)
     rake (10.1.0)
     simplecov (0.7.1)
       multi_json (~> 1.0)
       simplecov-html (~> 0.7.1)
     simplecov-html (0.7.1)
-    thread_safe (0.1.2)
+    thread_safe (0.1.3)
       atomic
     tzinfo (0.3.37)
 
@@ -35,6 +32,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activesupport
   boundy!
   mocha
   rake

@@ -21,7 +21,8 @@ class Boundy::Domain::AnteriorTest < ActiveSupport::TestCase
     @range = Boundy::Domain::Anterior.new(@datum)
   end
 
-  test 'constrain_to datum_bound equal' do
+  # constrain_to
+  test 'constrain_to domain equal' do
     new = Boundy::Domain.new(@before, @after)
 
     result = @range.constrain_to(new)
@@ -30,7 +31,7 @@ class Boundy::Domain::AnteriorTest < ActiveSupport::TestCase
     assert_equal @after, result.to.datum
   end
 
-  test 'constrain_to datum_bound tighter' do
+  test 'constrain_to domain tighter' do
     new = Boundy::Domain.new(@tighter_before, @tighter_after)
 
     result = @range.constrain_to(new)
@@ -39,13 +40,37 @@ class Boundy::Domain::AnteriorTest < ActiveSupport::TestCase
     assert_equal @tighter_after, result.to.datum
   end
 
-  test 'constrain_to datum_bound loserr' do
+  test 'constrain_to domain loserr' do
     new = Boundy::Domain.new(@looser_before, @looser_after)
 
     result = @range.constrain_to(new)
 
     assert_equal @before, result.from.datum
     assert_equal @looser_after, result.to.datum
+  end
+
+  test 'constrain_to anterior domain equal' do
+    new = Boundy::Domain::Anterior.new(@before)
+
+    result = @range.constrain_to(new)
+
+    assert_equal @before, result.from.datum
+  end
+
+  test 'constrain_to anterior domain tighter' do
+    new = Boundy::Domain::Anterior.new(@tighter_before)
+
+    result = @range.constrain_to(new)
+
+    assert_equal @tighter_before, result.from.datum
+  end
+
+  test 'constrain_to anterior domain loserr' do
+    new = Boundy::Domain::Anterior.new(@looser_before)
+
+    result = @range.constrain_to(new)
+
+    assert_equal @before, result.from.datum
   end
 
   test 'constrain_to range equal' do

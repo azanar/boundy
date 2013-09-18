@@ -1,39 +1,40 @@
-require 'ostruct'
-
 require File.expand_path('../../../test_helper', __FILE__)
 
 require 'boundy/time/comparator'
 
 class Boundy::Time::ComparatorTest < ActiveSupport::TestCase
-  @@bound = 5.days.ago
+  setup do
+    mock_time = mock
 
-  bounds = [
-    {:truthiness => :before?, :time => @@bound - 2.days},
-    {:truthiness => :within?, :time => @@bound},
-    {:truthiness => :after?, :time => @@bound + 2.days}
-  ]
+    mock_bound = mock
 
-  methods = [:before?, :after?, :within?]
+    mock_comparable_bound = mock
 
-  cases = bounds.product(methods).map do |p| 
-    c = p[0]
-    m = p[1]
-    t = c[:truthiness]
+    Boundy::Bound.expects(:new).with(mock_time).returns(mock_comparable_bound)
 
-    expected = (c[:truthiness] == m)
-    {:time => c[:time], 
-     :method => m, 
-     :truthiness => t,
-     :expected => expected
-    }
+    @mock_comparator = mock
+
+    Boundy::Bound::Comparator.expects(:new).with(mock_bound, mock_comparable_bound).returns(@mock_comparator)
+
+    @comp = Boundy::Time::Comparator.new(mock_bound, mock_time)
   end
 
-  cases.each do |c|
-    test "##{c[:method]}_#{c[:truthiness]}" do
-      comp = Boundy::Time::Comparator.new(@@bound, c[:time])
+  test "#before?" do
+    @mock_comparator.expects(:before?).returns(true)
 
-      assert_equal c[:expected], comp.send(c[:method])
-    end
+    assert @comp.before?, true
+  end
+
+  test "#within?" do
+    @mock_comparator.expects(:within?).returns(true)
+
+    assert @comp.within?, true
+  end
+
+  test "#after?" do
+    @mock_comparator.expects(:after?).returns(true)
+
+    assert @comp.after?, true
   end
 end
 

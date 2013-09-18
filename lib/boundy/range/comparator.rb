@@ -1,21 +1,37 @@
+require 'boundy/comparator'
+
 module Boundy
   class Range
     class Comparator
-      def initialize(date, subject)
-        @date = date
-        @subject = subject
+      def self.type
+        ::Range
+      end
+
+      include Boundy::Comparator
+
+      def initialize(domain, range)
+        if domain.nil?
+          raise
+        end
+
+        if range.nil?
+          raise
+        end
+
+        other = Boundy::Domain.new(range.begin, range.end)
+        @comparator = Boundy::Domain::Comparator.new(domain, other) 
       end
 
       def after?
-        @subject.begin > @date && @subject.end >= @date
+        @comparator.after?
       end
 
       def before?
-        @subject.begin <= @date && @subject.end < @date
+        @comparator.before?
       end
 
       def within?
-        @subject.begin <= @date && @subject.end >= @date
+        @comparator.within?
       end
     end
   end

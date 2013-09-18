@@ -1,11 +1,10 @@
-require 'active_support/time'
-
 require 'boundy/bound'
 require 'boundy/bound/infinite'
 
 require 'boundy/domain/anterior'
 require 'boundy/domain/posterior'
 
+require 'boundy/domain/comparator'
 require 'boundy/domain/constrainer'
 require 'boundy/range/constrainer'
 
@@ -20,26 +19,19 @@ module Boundy
         @from = b
         @to = e
       when ::Time
-        @from = beginning_bound_class.new(b)
-        @to = ending_bound_class.new(e)
+        @from = Boundy::Bound.new(b)
+        @to = Boundy::Bound.new(e)
       when Range
-        @from = beginning_bound_class.new(b.begin)
-        @to = ending_bound_class.new(b.end)
+        @from = Boundy::Bound.new(b.begin)
+        @to = Boundy::Bound.new(b.end)
       else
-        raise "Why the hell is b a #{b.class.name}"
+        raise "I can't convert #{b.class.name} into a Boundy::Domain"
       end
 
       unless valid?
-        raise "Backlooking date ranges aren't allowed.\n\nFROM: #{@from.inspect}\nTO: #{@to.inspect}"
+        raise "Backlooking ranges aren't allowed.\n\nFROM: #{@from.datum.to_s}\nTO: #{@to.datum.to_s}\n\n#{caller.join("\n")}"
       end
     end
-
-    def bound_class
-      Boundy::Bound
-    end
-
-    alias :beginning_bound_class :bound_class
-    alias :ending_bound_class :bound_class
 
     attr_reader :from
     attr_reader :to
@@ -70,6 +62,10 @@ module Boundy
       end
     end
 
+    def comparator
+      Boundy::Domain::Comparator
+    end
+
     def to_sql_clause
       "BETWEEN '#{@from.to_sql_timestamp}' AND '#{@to.to_sql_timestamp}'"
     end
@@ -83,12 +79,9 @@ module Boundy
     end
 
     def within?(subject)
-      puts "within? #{subject.inspect}"
       @from.within?(subject) || @from.after?(subject) and
       @to.within?(subject) || @to.before?(subject)
     end
-
-    alias :in_range? :within?
 
     def partially_after?(subject)
       @from.after?(subject) && @to.within?(subject) 

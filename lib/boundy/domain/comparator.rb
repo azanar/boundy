@@ -1,21 +1,25 @@
+require 'boundy/comparator'
+
 module Boundy
   class Domain
     class Comparator
-      def initialize(date, subject)
-        @date = date
+      include Boundy::Comparator
+
+      def initialize(datum, subject)
+        @datum = datum
         @subject = subject
       end
 
       def after?
-        @subject.from > @date && @subject.to >= @date
+        @subject.from > @datum && @subject.to >= @datum
       end 
 
       def before?
-        @subject.from <= @date && @subject.to < @date
+        @subject.from <= @datum && @subject.to < @datum
       end 
 
       def within?
-        @subject.from <= @date && @subject.to >= @date
+        @subject.from <= @datum && @subject.to >= @datum
       end 
     end
   end

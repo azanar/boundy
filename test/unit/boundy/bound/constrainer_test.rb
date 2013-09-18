@@ -14,8 +14,8 @@ class Boundy::Bound::ConstrainerTest < ActiveSupport::TestCase
   end
 
   test '#max right finite' do
-    later = Boundy::Bound.new(@later)
-    earlier =Boundy::Bound.new(@earlier)
+    later =  Boundy::Bound.new(@later)
+    earlier = Boundy::Bound.new(@earlier)
 
     result = Boundy::Bound::Constrainer.new(earlier, later).max
 
