@@ -4,7 +4,7 @@ module Boundy
       class Above < Infinite
         include Comparable
         def <=>(other)
-          -1 
+          1
         end
       end
     end

@@ -16,8 +16,8 @@ class Boundy::BoundTest < ActiveSupport::TestCase
       name: "behind",
       time: time - 2.days,
       truthiness: [
-        {method: :before?, domain: :anterior},
-        {method: :within?, domain: :posterior}
+        {method: :within?, domain: :anterior},
+        {method: :before?, domain: :posterior}
       ]
     },
     {
@@ -33,8 +33,8 @@ class Boundy::BoundTest < ActiveSupport::TestCase
       name: "ahead",
       time: time + 2.days,
       truthiness: [
-        {method: :within?, domain: :anterior},
-        {method: :after?, domain: :posterior}
+        {method: :within?, domain: :posterior},
+        {method: :after?, domain: :anterior}
       ]
     }
   ]
@@ -71,12 +71,6 @@ class Boundy::BoundTest < ActiveSupport::TestCase
     test "##{c[:domain]}##{c[:method]}_#{c[:name]}" do
       bound = Boundy::Bound.new(c[:time])
       domain = c[:class].new(bound)
-      result = nil
-#      Tracer.add_filter do |event, file, line, id, binding, klass, *rest|
-#        (/core_ext/ =~ file.to_s).nil?
-#      end
-#      Tracer.on {
-#      }
       result = test_bound.method(c[:method]).call(domain)
       assert_equal c[:expected], result, c[:failure]
     end

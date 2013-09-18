@@ -29,7 +29,7 @@ module Boundy
       end
 
       unless valid?
-        raise "Backlooking ranges aren't allowed.\n\nFROM: #{@from.datum.to_s}\nTO: #{@to.datum.to_s}\n\n#{caller.join("\n")}"
+        raise "Backlooking ranges aren't allowed.\n\nFROM: #{@from.inspect}\nTO: #{@to.inspect}\n\n#{caller.join("\n")}"
       end
     end
 

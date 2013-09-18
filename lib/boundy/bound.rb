@@ -43,8 +43,10 @@ module Boundy
 
     def <=>(other)
       case other
-      when Boundy::Bound::Infinite
-        other <=> self
+      when Boundy::Bound::Infinite::Above
+        (other <=> self) * -1
+      when Boundy::Bound::Infinite::Below
+        (other <=> self) * -1
       when Boundy::Bound
         datum <=> other.datum
       else
