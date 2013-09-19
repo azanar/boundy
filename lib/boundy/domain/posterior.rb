@@ -2,11 +2,21 @@ require 'boundy/domain'
 require 'boundy/bound'
 require 'boundy/bound/infinite/below' 
 
-#require 'manacle/proxy'
-
 module Boundy
-  class Domain
-    class Posterior < Domain
+  module Domain
+    class Posterior 
+      def self.builder
+        {
+          bounds: {
+            from: Boundy::Bound::Infinite::Below, 
+            to: Boundy::Bound
+          },
+          builder: Proc.new {|b,e| self.new(e)}
+        }
+      end
+
+      include Domain::Plugin
+
       def initialize(datum)
         if datum.nil?
           raise
@@ -15,7 +25,7 @@ module Boundy
         @from = Boundy::Bound::Infinite::Below.new
         @to = case datum
                 when Boundy::Bound
-                  datum.dup
+                  datum
                 else
                   Boundy::Bound.new(datum)
                 end

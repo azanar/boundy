@@ -1,7 +1,7 @@
 require 'boundy/comparator'
 
 module Boundy
-  class Domain
+  module Domain
     class Comparator
       include Boundy::Comparator
 

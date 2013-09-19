@@ -7,7 +7,7 @@ require 'boundy/comparators'
 module Boundy
   class Bound
     def initialize(datum)
-      if datum.class <= self.class
+      if datum.class <= self.class || datum.class < Boundy::Bound::Infinite
         raise "Datum is a Bound already!"
       end
 

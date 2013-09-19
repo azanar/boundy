@@ -1,100 +1,113 @@
 require 'boundy/bound'
-require 'boundy/bound/infinite'
-
-require 'boundy/domain/anterior'
-require 'boundy/domain/posterior'
 
 require 'boundy/domain/comparator'
 require 'boundy/domain/constrainer'
 require 'boundy/range/constrainer'
 
 module Boundy
-  class Domain
-    def initialize(b,e=nil)
-      case b
-      when Boundy::Bound
-        @from = b
-        @to = e
-      when Boundy::Bound::Infinite::Below
-        @from = b
-        @to = e
-      when ::Time
-        @from = Boundy::Bound.new(b)
-        @to = Boundy::Bound.new(e)
-      when Range
-        @from = Boundy::Bound.new(b.begin)
-        @to = Boundy::Bound.new(b.end)
+  module Domain
+    module Plugin
+      def self.included(base)
+        Domain.builder.add(base)
+        base.instance_eval do
+          include InstanceMethods
+          attr_reader :from
+          attr_reader :to
+        end
+      end
+    end
+
+    class Builder
+      def initialize
+        @klasses = {}
+      end
+
+      def add(domain_klass)
+        builder = domain_klass.builder
+
+        bound_types = builder[:bounds]
+        builder_method = builder[:builder]
+
+        @klasses[bound_types] = builder_method
+      end
+
+      def build(a,b)
+        builder = @klasses[{from: a.class, to: b.class}]
+
+        if builder.nil?
+          raise "Could not find class for #{a.class} and #{b.class}"
+        end
+
+        builder.call(a,b)
+      end
+    end
+
+
+    def self.builder
+      @builder ||= Builder.new
+    end
+
+
+    def self.translate(bound)
+      if bound.class <= Boundy::Bound or bound.class < Boundy::Bound::Infinite
+        bound
       else
-        raise "I can't convert #{b.class.name} into a Boundy::Domain"
-      end
-
-      unless valid?
-        raise "Backlooking ranges aren't allowed.\n\nFROM: #{@from.inspect}\nTO: #{@to.inspect}\n\n#{caller.join("\n")}"
+        Boundy::Bound.new(bound)
       end
     end
 
-    attr_reader :from
-    attr_reader :to
-
-    def joinable?(subject)
-      strictly_earlier?(subject) || strictly_later?(subject)
-    end
-
-    def valid?
-      raise if from.nil?
-      raise if to.nil?
-
-      from <= to
-    end
-
-    def constrain_to(subject)
-      constrainer(subject).constrain
-    end
-
-    def constrainer(subject)
-      case subject
-      when ::Range
-         Boundy::Range::Constrainer.new(self, subject)
-      when Boundy::Domain
-         Boundy::Domain::Constrainer.new(self, subject)
+    def self.new(b,e=nil)
+      if b.class <= Boundy::Domain::Plugin 
+        b
       else
-        raise "I can't constrain myself against a #{subject.inspect}"
+        b = translate(b)
+        e = translate(e)
+
+        built = builder.build(b,e)
+        unless built.class < Plugin
+          raise
+        end
+        built
       end
     end
 
-    def comparator
-      Boundy::Domain::Comparator
-    end
+    module InstanceMethods
 
-    def to_sql_clause
-      "BETWEEN '#{@from.to_sql_timestamp}' AND '#{@to.to_sql_timestamp}'"
-    end
+      def within?(subject)
+        @from.within?(subject) || @from.after?(subject) and
+        @to.within?(subject) || @to.before?(subject)
+      end
 
-    def strictly_earlier?(subject)
-      @from.before?(subject)
-    end
+      def joinable?(subject)
+        strictly_earlier?(subject) || strictly_later?(subject)
+      end
 
-    def strictly_after?(subject)
-      @to.after?(subject)
-    end
+      def constrain_to(subject)
+        constrainer(subject).constrain
+      end
 
-    def within?(subject)
-      @from.within?(subject) || @from.after?(subject) and
-      @to.within?(subject) || @to.before?(subject)
-    end
+      def constrainer(subject)
+        if subject.class == ::Range
+          Boundy::Range::Constrainer.new(self, subject)
+        elsif subject.class < Boundy::Domain::Plugin
+          Boundy::Domain::Constrainer.new(self, subject)
+        else
+          raise "I can't constrain myself against a #{subject.class}"
+        end
+      end
 
-    def partially_after?(subject)
-      @from.after?(subject) && @to.within?(subject) 
-    end
+      def comparator
+        Boundy::Domain::Comparator
+      end
 
-    def partially_before?(subject)
-      @from.within?(subject) && @to.before?(subject) 
-    end
-
-    def partially_within?(subject)
-      [:within?, :partially_before?, :partially_after?].any? do |m|
-        send(m, subject)
+      def to_sql_clause
+        "BETWEEN '#{@from.to_sql_timestamp}' AND '#{@to.to_sql_timestamp}'"
       end
     end
   end
 end
+
+
+require 'boundy/domain/anterior'
+require 'boundy/domain/finite'
+require 'boundy/domain/posterior'

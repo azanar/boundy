@@ -1,12 +1,14 @@
 require 'boundy/bound/constrainer'
+require 'boundy/domain'
 
 module Boundy
-  class Domain
+  module Domain
     class Constrainer
       def initialize(me, other)
         @me = me
         @other = other
       end
+
 
       def constrain
         from = Boundy::Bound::Constrainer.new(@me.from, @other.from)
