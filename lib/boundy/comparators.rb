@@ -1,32 +1,23 @@
 require 'set'
 
+require 'punchout'
+require 'punchout/matcher/class'
+
 module Boundy
   module Comparators
-    class Registry
-      def initialize
-        @known_types = Set.new
-        @mappings = {}
-      end
+    extend Punchout::Punchable
 
-      def add(type, comparator)
-        @known_types << type
-        @mappings[type] = comparator
-      end
+    self.matcher = Punchout::Matcher::Klass
 
-      def fetch(type)
-        @mappings.fetch(type)
-      end
-    end
-
-    def self.registry
-      @registry ||= Registry.new
+    def self.add(type, comparator)
+      puncher.add(type, comparator)
     end
 
     def self.comparator(datum,subject)
       comparator = if subject.respond_to?(:comparator)
                      subject.comparator
                    else
-                     registry.fetch(subject.class)
+                     puncher.fetch(subject.class)
                    end
 
       comparator.new(datum, subject)

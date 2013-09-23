@@ -12,7 +12,7 @@ module Boundy
               end
 
       types.each do |t|
-        Boundy::Comparators.registry.add(t, base)
+        Boundy::Comparators.add(t, base)
       end
     end
   end

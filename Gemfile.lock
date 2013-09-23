@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     boundy (0.1.0)
+      punchout
 
 GEM
   remote: https://rubygems.org/
@@ -19,6 +20,7 @@ GEM
     mocha (0.14.0)
       metaclass (~> 0.0.1)
     multi_json (1.8.0)
+    punchout (0.0.1)
     rake (10.1.0)
     simplecov (0.7.1)
       multi_json (~> 1.0)
