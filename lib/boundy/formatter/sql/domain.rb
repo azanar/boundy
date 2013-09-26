@@ -1,9 +1,9 @@
-require 'boundy/domain/formatter'
+require 'boundy/formatter/domain'
 require 'boundy/formatter/sql'
 
 module Boundy
-  module Domain
-    module Formatter
+  module Formatter
+    module Domain
       class Sql
         def self.type
           Boundy::Domain::Plugin

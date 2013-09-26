@@ -1,18 +1,19 @@
 require 'punchout'
 require 'punchout/matcher/class'
 
-require 'boundy/bound/formatter'
+require 'boundy/formatter/bound'
+require 'boundy/formatter/time'
 
 module Boundy
-  class Time
-    class Formatter
+  module Formatter
+    class Time
       class Factory
         def initialize(format)
           @format = format
         end
 
         def build(time)
-          Boundy::Time::Formatter.new(@format, time)
+          Boundy::Formatter::Time.new(@format, time)
         end
 
         def format
@@ -28,7 +29,7 @@ module Boundy
         Factory
       end
 
-      include Boundy::Bound::Formatter
+      include Boundy::Formatter::Bound
 
       def initialize(format, time)
         @formatted = time.strftime(format)

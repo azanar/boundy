@@ -1,17 +1,17 @@
-require 'boundy/bound/formatter'
+require 'boundy/formatter/bound'
 
 module Boundy
-  module Domain
-    module Formatter
+  module Formatter
+    module Domain
       def initialize(domain)
         @from = domain.from
         @to = domain.to
 
         if @from.finite?
-          @from_formatter = Boundy::Bound::Formatter.new(@from)
+          @from_formatter = Boundy::Formatter::Bound.new(@from)
         end
         if @to.finite?
-          @to_formatter = Boundy::Bound::Formatter.new(@to)
+          @to_formatter = Boundy::Formatter::Bound.new(@to)
         end
       end
     end

@@ -2,8 +2,8 @@ require 'punchout'
 require 'punchout/matcher/ancestry'
 
 module Boundy
-  class Bound
-    module Formatter
+  module Formatter
+     module Bound
       extend Punchout::Punchable
 
       class << self

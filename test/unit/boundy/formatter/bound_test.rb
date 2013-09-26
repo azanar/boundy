@@ -1,4 +1,8 @@
-class Boundy::Bound::FormatterTest < ActiveSupport::TestCase
+require File.expand_path('../../../test_helper', __FILE__)
+
+require 'boundy/formatter/bound'
+
+class Boundy::Formatter::BoundTest < ActiveSupport::TestCase
   test "#to_s" do 
     mock_type = Class.new
     mock_factory = mock
@@ -25,7 +29,7 @@ class Boundy::Bound::FormatterTest < ActiveSupport::TestCase
     formatter_klass.factory = mock_factory
 
     formatter_klass.class_eval do
-      include Boundy::Bound::Formatter
+      include Boundy::Formatter::Bound
     end
   end
 end
