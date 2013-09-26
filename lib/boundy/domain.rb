@@ -100,8 +100,10 @@ module Boundy
         Boundy::Domain::Comparator
       end
 
-      def to_sql_clause
-        "BETWEEN '#{@from.to_sql_timestamp}' AND '#{@to.to_sql_timestamp}'"
+      def format(formatter)
+        if from.finite?
+        elsif to.finite?
+        end
       end
     end
   end

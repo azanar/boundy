@@ -27,12 +27,16 @@ module Boundy
         nil
       end
 
-      def <=>(other)
-        raise ""
+      def finite?
+        false
       end
 
-      def to_sql_timestamp
-        raise "You shouldn't be calling me!"
+      def infinite?
+        true
+      end
+
+      def <=>(other)
+        raise ""
       end
     end
   end

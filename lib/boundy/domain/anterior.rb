@@ -40,10 +40,6 @@ module Boundy
       def inspect
         "#<#{self.class.name} bounded below by #{@from.inspect}>"
       end
-
-      def to_sql_clause
-        ">= '#{@from.to_sql_timestamp}'"
-      end
     end
   end
 end

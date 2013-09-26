@@ -7,17 +7,17 @@ module Boundy
   module Comparators
     extend Punchout::Punchable
 
-    self.matcher = Punchout::Matcher::Klass
 
     def self.add(type, comparator)
-      puncher.add(type, comparator)
+      matchable = Punchout::Matcher::Klass.new(type).punches(comparator)
+      puncher.add(matchable)
     end
 
     def self.comparator(datum,subject)
       comparator = if subject.respond_to?(:comparator)
                      subject.comparator
                    else
-                     puncher.fetch(subject.class)
+                     puncher.punch(subject.class)
                    end
 
       comparator.new(datum, subject)

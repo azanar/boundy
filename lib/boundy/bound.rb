@@ -29,6 +29,14 @@ module Boundy
       Comparators.comparator(self, subject).within?
     end
 
+    def finite?
+      true
+    end
+
+    def infinite?
+      false
+    end
+
     def inspect
       "#<#{self.class.name} bounded at #{@datum.inspect}>"
     end
@@ -52,10 +60,6 @@ module Boundy
       else
         raise "Can not compare a Bound to a #{other.class}"
       end
-    end
-
-    def to_sql_timestamp
-      @datum.strftime("%Y-%m-%d %H:%M:%S")
     end
   end
 end

@@ -3,7 +3,6 @@ require 'boundy/domain'
 module Boundy
   module Domain
     class Finite
-
       def self.builder
         {
           bounds: {
@@ -46,7 +45,6 @@ module Boundy
       def strictly_after?(subject)
         @to.after?(subject)
       end
-
 
       def partially_after?(subject)
         @from.after?(subject) && @to.within?(subject) 

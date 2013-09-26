@@ -2,10 +2,10 @@ require 'pathname'
 
 Gem::Specification.new do |s|
   s.name        = "boundy"
-  s.version     = "0.1.0"
+  s.version     = "0.2.0"
   s.summary     = "A date bounding library"
 
-  s.license     = "Proprietary"
+  s.license     = "MIT"
 
   s.authors     = ["Ed Carrel"]
   s.email       = ["ed@pocketchange.com"]

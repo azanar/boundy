@@ -27,7 +27,6 @@ class Boundy::Domain::AnteriorTest < ActiveSupport::TestCase
 
     result = @range.constrain_to(new)
 
-    puts "RESULT #{result.inspect}"
     assert_equal @before, result.from.datum
     assert_equal @after, result.to.datum
   end
