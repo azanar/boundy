@@ -1,16 +1,16 @@
-require 'boundy/formatter/sql/domain'
+require 'boundy/formatters/sql/domain'
 
-module Boundy::Formatter::Sql::Domain
+module Boundy::Formatters::Sql::Domain
   class Posterior
     def self.type
       Boundy::Domain::Posterior
     end
 
-    include Boundy::Formatter::Sql::Domain
+    include Boundy::Formatters::Sql::Domain
 
     def initialize(domain, name)
       super
-      @formatter = Boundy::Formatter::Bound.new(@to)
+      @formatter = Boundy::Formatters::Bound.new(@to)
     end
 
     def to_s

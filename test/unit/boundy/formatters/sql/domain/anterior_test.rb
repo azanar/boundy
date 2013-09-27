@@ -1,8 +1,8 @@
 require File.expand_path('../../../../../test_helper', __FILE__)
 
-require 'boundy/formatter/sql/domain/anterior'
+require 'boundy/formatters/sql/domain/anterior'
 
-class Boundy::Formatter::Sql::Domain::AnterorTest < ActiveSupport::TestCase
+class Boundy::Formatters::Sql::Domain::AnterorTest < ActiveSupport::TestCase
   setup do
 
     @mock_domain = mock
@@ -15,13 +15,13 @@ class Boundy::Formatter::Sql::Domain::AnterorTest < ActiveSupport::TestCase
     @mock_from_formatter = mock
     @mock_to_formatter = mock
 
-    Boundy::Formatter::Bound.expects(:new).with(@mock_from).returns(@mock_from_formatter)
+    Boundy::Formatters::Bound.expects(:new).with(@mock_from).returns(@mock_from_formatter)
   end
 
   test "#to_s" do
     @mock_from_formatter.expects(:to_s).returns("from")
 
-    formatter = Boundy::Formatter::Sql::Domain::Anterior.new(@mock_domain, "mock_thing")
+    formatter = Boundy::Formatters::Sql::Domain::Anterior.new(@mock_domain, "mock_thing")
     result = formatter.to_s
     
     assert_equal "mock_thing >= 'from'", result

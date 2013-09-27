@@ -15,7 +15,7 @@ class Boundy::Formatter::SqlTest < ActiveSupport::TestCase
         @@type
       end
 
-      def initialize(inst)
+      def initialize(inst, name)
       end
     end
 
@@ -29,7 +29,7 @@ class Boundy::Formatter::SqlTest < ActiveSupport::TestCase
   test "#new" do
     rand_inst = @random.new
 
-    Boundy::Formatter::Sql.new(rand_inst)
+    Boundy::Formatter::Sql.new(rand_inst, "rand_name")
 
   end
 end

@@ -1,8 +1,8 @@
 require File.expand_path('../../../test_helper', __FILE__)
 
-require 'boundy/formatter/bound'
+require 'boundy/formatters/bound'
 
-class Boundy::Formatter::BoundTest < ActiveSupport::TestCase
+class Boundy::Formatters::BoundTest < ActiveSupport::TestCase
   test "#to_s" do 
     mock_type = Class.new
     mock_factory = mock
@@ -28,8 +28,10 @@ class Boundy::Formatter::BoundTest < ActiveSupport::TestCase
     formatter_klass.type = mock_type
     formatter_klass.factory = mock_factory
 
+    formatter_klass.factory.expects(:new).with("%Y-%m-%d %H:%M:%S")
+
     formatter_klass.class_eval do
-      include Boundy::Formatter::Bound
+      include Boundy::Formatters::Bound
     end
   end
 end

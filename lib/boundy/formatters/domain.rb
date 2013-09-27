@@ -1,7 +1,7 @@
-require 'boundy/formatter/bound'
+require 'boundy/formatters/bound'
 
 module Boundy
-  module Formatter
+  module Formatters
     module Domain
       def initialize(domain)
         @from = domain.from

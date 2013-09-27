@@ -1,16 +1,16 @@
-require 'boundy'
-
-require 'boundy/formatter/factory'
+require 'punchout/matcher/class'
 
 module Boundy
   module Formatter
-    module Sql
-      include Boundy::Formatter::Factory
-
-      class << self
-        def included(base)
-          add(base.type, base)
+    module Punchable
+      def self.included(base)
+        base.instance_exec do
+          extend Punchout::Punchable
+          extend ClassMethods
         end
+      end
+
+      module ClassMethods
 
         def new(subject, name)
           f = formatter(subject)
@@ -20,8 +20,8 @@ module Boundy
           f.new(subject, name)
         end
 
-        def add(type, formatter)
-          matchable = Punchout::Matcher::Ancestry.new(type).punches(formatter)
+        def add(type, comparator)
+          matchable = Punchout::Matcher::Klass.new(type).punches(comparator)
           puncher.add(matchable)
         end
 
@@ -32,5 +32,3 @@ module Boundy
     end
   end
 end
-
-require 'boundy/formatters/sql/domain'

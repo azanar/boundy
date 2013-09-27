@@ -2,7 +2,7 @@ require 'punchout'
 require 'punchout/matcher/ancestry'
 
 module Boundy
-  module Formatter
+  module Formatters
      module Bound
       extend Punchout::Punchable
 
