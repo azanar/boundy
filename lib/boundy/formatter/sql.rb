@@ -1,3 +1,5 @@
+require 'boundy'
+
 require 'punchout/matcher/ancestry'
 
 module Boundy
@@ -5,22 +7,25 @@ module Boundy
     module Sql
       extend Punchout::Punchable
 
-
       class << self
         def included(base)
+          puts "INCLUDED!"
           add(base.type, base)
         end
 
-        def new(subject)
+        def new(subject, name)
           f = formatter(subject)
           if f.nil?
-            raise "I have no formatter for #{subject.inspect}"
+            Boundy.logger.info "PUNCHER #{puncher.inspect}"
+            
+            raise "I have no formatter for #{subject.class}"
           end
-          f.new(subject)
+          f.new(subject, name)
         end
 
-        def add(type, comparator)
-          matchable = Punchout::Matcher::Ancestry.new(type).punches(comparator)
+        def add(type, formatter)
+          matchable = Punchout::Matcher::Ancestry.new(type).punches(formatter)
+          Boundy.logger.info "Adding #{type} as punchable to #{formatter}"
           puncher.add(matchable)
         end
 
@@ -31,3 +36,5 @@ module Boundy
     end
   end
 end
+
+require 'boundy/formatter/sql/domain'
