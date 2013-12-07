@@ -1,5 +1,8 @@
 $:.push('lib')
 
+require 'coveralls'
+Coveralls.wear!
+
 if ENV["ENABLE_SIMPLE_COV"]
   require 'simplecov'
 #  require File.expand_path('../simplecov_helper', __FILE__)
