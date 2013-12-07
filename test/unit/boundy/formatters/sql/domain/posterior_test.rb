@@ -2,21 +2,19 @@ require File.expand_path('../../../../../test_helper', __FILE__)
 
 require 'boundy/formatters/sql/domain/posterior'
 
-class Boundy::Formatters::Sql::Domain::PosteriorTest < ActiveSupport::TestCase
+class Boundy::Formatters::Sql::Domain::PosteriorTest < Test::Unit::TestCase
   setup do
+    @name = "mock_thing"
 
     @mock_domain = mock
 
-    @mock_from = mock
     @mock_to = mock
 
-    @mock_domain.expects(:from).returns(@mock_from)
     @mock_domain.expects(:to).returns(@mock_to)
 
-    @mock_from_formatter = mock
     @mock_to_formatter = mock
 
-    Boundy::Formatters::Bound.expects(:new).with(@mock_to).returns(@mock_to_formatter)
+    Boundy::Formatter::Sql.expects(:new).with(@mock_to, @name).returns(@mock_to_formatter)
   end
 
   test "#to_s" do

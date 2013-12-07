@@ -5,7 +5,7 @@ require 'boundy/domain'
 require 'boundy/domain/anterior'
 require 'boundy/domain/posterior'
 
-class Boundy::BoundTest < ActiveSupport::TestCase
+class Boundy::BoundTest < Test::Unit::TestCase
   time = 5.days.ago
   test_bound = Boundy::Bound.new(time)
 
@@ -57,10 +57,10 @@ class Boundy::BoundTest < ActiveSupport::TestCase
     expected = (truthiness.include?({method: method, domain: domain}))
 
     t.merge({ :method => method, 
-     :domain => domain,
-     :class => klass,
-     :expected => expected,
-     :failure => "#{domain.to_s}##{method} against #{t[:time]}"
+              :domain => domain,
+              :class => klass,
+              :expected => expected,
+              :failure => "#{domain.to_s}##{method} against #{t[:time]}"
     })
   end
 
@@ -72,5 +72,15 @@ class Boundy::BoundTest < ActiveSupport::TestCase
       result = test_bound.method(c[:method]).call(domain)
       assert_equal c[:expected], result, c[:failure]
     end
+  end
+
+  test "<=>" do
+    now = Time.new(2013,9,1)
+
+    from = Boundy::Bound.new(now - 5.day)
+    to = Boundy::Bound.new(now - 1.day)
+
+    assert_equal from <=> to, -1
+
   end
 end

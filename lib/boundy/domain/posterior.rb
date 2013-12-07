@@ -32,7 +32,7 @@ module Boundy
       end
 
       def cute
-        "[-∞, #{@to.datum}]"
+        "[-infinity, #{@to.datum}]"
       end
 
       def inspect

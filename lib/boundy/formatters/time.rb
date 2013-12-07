@@ -1,5 +1,4 @@
-require 'punchout'
-require 'punchout/matcher/class'
+require 'boundy/formatter/sql/plugin'
 
 require 'boundy/formatters/bound'
 require 'boundy/formatters/time'
@@ -12,12 +11,8 @@ module Boundy
           @format = format
         end
 
-        def build(time)
+        def build(time, name)
           Boundy::Formatters::Time.new(@format, time)
-        end
-
-        def format
-          raise "I'm a factory! I can't format anything!"
         end
       end
 
@@ -25,11 +20,15 @@ module Boundy
         ::Time
       end
 
-      def self.factory
-        Factory
+
+      class << self
+        def factory
+          @factory = Factory.new("%Y-%m-%d %H:%M:%S")
+        end
+        attr_writer :factory
       end
 
-      include Boundy::Formatters::Bound
+      include Boundy::Formatter::Sql::Plugin
 
       def initialize(format, time)
         @formatted = time.strftime(format)

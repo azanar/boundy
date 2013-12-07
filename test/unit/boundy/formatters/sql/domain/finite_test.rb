@@ -2,8 +2,9 @@ require File.expand_path('../../../../../test_helper', __FILE__)
 
 require 'boundy/formatters/sql/domain/finite'
 
-class Boundy::Formatters::Sql::Domain::FiniteTest < ActiveSupport::TestCase
+class Boundy::Formatters::Sql::Domain::FiniteTest < Test::Unit::TestCase
   setup do
+    @name = "mock_thing"
 
     @mock_domain = mock
 
@@ -16,8 +17,8 @@ class Boundy::Formatters::Sql::Domain::FiniteTest < ActiveSupport::TestCase
     @mock_from_formatter = mock
     @mock_to_formatter = mock
 
-    Boundy::Formatters::Bound.expects(:new).with(@mock_from).returns(@mock_from_formatter)
-    Boundy::Formatters::Bound.expects(:new).with(@mock_to).returns(@mock_to_formatter)
+    Boundy::Formatter::Sql.expects(:new).with(@mock_from, @name).returns(@mock_from_formatter)
+    Boundy::Formatter::Sql.expects(:new).with(@mock_to, @name).returns(@mock_to_formatter)
 
   end
 

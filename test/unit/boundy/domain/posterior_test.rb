@@ -3,7 +3,7 @@ require File.expand_path('../../../test_helper', __FILE__)
 require 'boundy/domain'
 require 'boundy/domain/posterior'
 
-class Boundy::Domain::PosteriorTest < ActiveSupport::TestCase
+class Boundy::Domain::PosteriorTest < Test::Unit::TestCase
   setup do
     @now = Time.now
     @before = @now - 5.days

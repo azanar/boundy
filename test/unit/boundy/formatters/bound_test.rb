@@ -2,37 +2,42 @@ require File.expand_path('../../../test_helper', __FILE__)
 
 require 'boundy/formatters/bound'
 
-class Boundy::Formatters::BoundTest < ActiveSupport::TestCase
+class Boundy::Formatters::BoundTest < Test::Unit::TestCase
   test "#to_s" do 
     mock_type = Class.new
-    mock_factory = mock
 
     formatter_klass = Class.new do
-      def self.type=(type)
-        @type = type
+      def initialize(bound)
+        @formatter = self.class.formatter
+        super
       end
 
-      def self.type
-        @type
+      def self.formatter=(formatter)
+        @formatter = formatter
       end
 
-      def self.factory=(factory)
-        @factory = factory
-      end
-      
-      def self.factory
-        @factory
+      def self.formatter
+        @formatter
       end
     end
-
-    formatter_klass.type = mock_type
-    formatter_klass.factory = mock_factory
-
-    formatter_klass.factory.expects(:new).with("%Y-%m-%d %H:%M:%S")
 
     formatter_klass.class_eval do
       include Boundy::Formatters::Bound
     end
+
+    mock_bound = mock
+    mock_formatter = mock
+
+    formatter_klass.formatter = mock_formatter
+
+    mock_formatted = mock
+    mock_formatter.expects(:to_s).returns(mock_formatted)
+
+    formatter = formatter_klass.new(mock_bound)
+
+    result = formatter.to_s
+
+    assert_equal mock_formatted, result
   end
 end
 

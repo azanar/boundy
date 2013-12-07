@@ -3,7 +3,7 @@ require File.expand_path('../../../../test_helper', __FILE__)
 require 'boundy/bound'
 require 'boundy/bound/infinite/above'
 
-class Boundy::Bound::Infinite::AboveTest < ActiveSupport::TestCase
+class Boundy::Bound::Infinite::AboveTest < Test::Unit::TestCase
   setup do
     now = Time.now
     @now_bound = Boundy::Bound.new(now)

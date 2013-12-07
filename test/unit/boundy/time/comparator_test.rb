@@ -2,7 +2,7 @@ require File.expand_path('../../../test_helper', __FILE__)
 
 require 'boundy/time/comparator'
 
-class Boundy::Time::ComparatorTest < ActiveSupport::TestCase
+class Boundy::Time::ComparatorTest < Test::Unit::TestCase
   setup do
     mock_time = mock
 
@@ -22,19 +22,19 @@ class Boundy::Time::ComparatorTest < ActiveSupport::TestCase
   test "#before?" do
     @mock_comparator.expects(:before?).returns(true)
 
-    assert @comp.before?, true
+    assert_equal @comp.before?, true
   end
 
   test "#within?" do
     @mock_comparator.expects(:within?).returns(true)
 
-    assert @comp.within?, true
+    assert_equal @comp.within?, true
   end
 
   test "#after?" do
     @mock_comparator.expects(:after?).returns(true)
 
-    assert @comp.after?, true
+    assert_equal @comp.after?, true
   end
 end
 

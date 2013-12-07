@@ -1,20 +1,24 @@
-require 'boundy/formatters/sql/domain'
+require 'boundy/formatter/sql/domain/plugin'
+require 'boundy/domain/finite'
 
-module Boundy::Formatters::Sql::Domain
-  class Finite
-    def self.type
-      Boundy::Domain::Finite
-    end
+module Boundy::Formatters::Sql
+  class Domain
+    class Finite
+      def self.type
+        Boundy::Domain::Finite
+      end
 
-    include Boundy::Formatters::Sql::Domain
-    def initialize(domain, name)
-      super
-      @from_formatter = Boundy::Formatters::Bound.new(@from)
-      @to_formatter = Boundy::Formatters::Bound.new(@to)
-    end
+      include Boundy::Formatter::Sql::Domain::Plugin
 
-    def to_s
-      "#{@name} >= '#{@from_formatter.to_s}' AND #{@name} <= '#{@to_formatter.to_s}'"
+      def initialize(domain, name)
+        @name = name
+        @from_formatter = Boundy::Formatter::Sql.new(domain.from, name)
+        @to_formatter = Boundy::Formatter::Sql.new(domain.to, name)
+      end
+
+      def to_s
+        "#{@name} >= '#{@from_formatter.to_s}' AND #{@name} <= '#{@to_formatter.to_s}'"
+      end
     end
   end
 end

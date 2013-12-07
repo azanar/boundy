@@ -5,7 +5,7 @@ require 'boundy/bound'
 require 'boundy/bound/constrainer'
 require 'boundy/bound/infinite'
 
-class Boundy::Bound::ConstrainerTest < ActiveSupport::TestCase
+class Boundy::Bound::ConstrainerTest < Test::Unit::TestCase
   setup do
     @now = Time.now
 

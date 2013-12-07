@@ -1,33 +1,24 @@
-require 'punchout'
-require 'punchout/matcher/class'
-
-require 'boundy/formatter/punchable'
-require 'boundy/formatter/sql'
+require 'boundy/formatter/sql/domain/plugin'
 
 require 'boundy/formatters/domain'
 
 module Boundy::Formatters::Sql
-  module Domain
+  class Domain
     def self.type
       Boundy::Domain::Plugin
     end
 
-    include Boundy::Formatter::Sql
-    include Boundy::Formatter::Punchable
-
-    def self.included(base)
-      add(base.type, base)
-      base.instance_exec do
-        include Boundy::Formatters::Domain
-        include InstanceMethods
+    def initialize(domain, name)
+      @formatter = Boundy::Formatter::Sql::Domain::Plugin.for(domain).new(domain,name)
+      if @formatter.nil?
+        raise "No formatter registered for #{obj.inspect}"
       end
     end
 
-    module InstanceMethods
-      def initialize(domain, name)
-        @name = name
-        super(domain)
-      end
+    include Boundy::Formatter::Sql::Plugin
+
+    def to_s
+      @formatter.to_s
     end
   end
 end

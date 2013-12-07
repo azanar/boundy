@@ -3,7 +3,7 @@ require File.expand_path('../../../test_helper', __FILE__)
 require 'boundy/domain'
 require 'boundy/domain/anterior'
 
-class Boundy::Domain::AnteriorTest < ActiveSupport::TestCase
+class Boundy::Domain::AnteriorTest < Test::Unit::TestCase
   setup do
     @now = Time.now
 

@@ -34,7 +34,7 @@ module Boundy
       end
 
       def cute
-        "[#{@from.datum}, ∞]"
+        "[#{@from.datum}, infinity]"
       end
 
       def inspect

@@ -4,7 +4,7 @@ require 'boundy/domain'
 require 'boundy/domain/finite'
 require 'boundy/range/comparator'
 
-class Boundy::DomainTest < ActiveSupport::TestCase
+class Boundy::DomainTest < Test::Unit::TestCase
   setup do
     @now = Time.now
     @before = @now - 5.days

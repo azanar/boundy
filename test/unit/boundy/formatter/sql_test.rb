@@ -2,34 +2,25 @@ require File.expand_path('../../../test_helper', __FILE__)
 
 require 'boundy/formatter/sql'
 
-class Boundy::Formatter::SqlTest < ActiveSupport::TestCase
+class Boundy::Formatter::SqlTest < Test::Unit::TestCase
   setup do
-    @random = Class.new
+    mock_instance = mock
+    @mock_delegate_formatter_factory = mock
 
-    @formatter = Class.new do
-      def self.type=(type)
-        @@type = type
-      end
+    Boundy::Formatter::Sql::Plugin.expects(:for).with(mock_instance).returns(@mock_delegate_formatter_factory)
+    @mock_formatter = mock
+    @mock_delegate_formatter_factory.expects(:build).with(mock_instance, "mock_name").returns(@mock_formatter)
 
-      def self.type
-        @@type
-      end
-
-      def initialize(inst, name)
-      end
-    end
-
-    @formatter.type = @random
-
-    @formatter.class_eval do
-      include Boundy::Formatter::Sql
-    end
+    @formatter = Boundy::Formatter::Sql.new(mock_instance, "mock_name")
   end
 
-  test "#new" do
-    rand_inst = @random.new
+  test ".to_s" do
+    mock_rep = mock
 
-    Boundy::Formatter::Sql.new(rand_inst, "rand_name")
+    @mock_formatter.expects(:to_s).returns(mock_rep)
 
+    result = @formatter.to_s
+
+    assert_equal mock_rep, result
   end
 end

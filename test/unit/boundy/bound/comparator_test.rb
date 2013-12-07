@@ -2,7 +2,7 @@ require File.expand_path('../../../test_helper', __FILE__)
 
 require 'boundy/bound/comparator'
 
-class Boundy::Bound::ComparatorTest < ActiveSupport::TestCase
+class Boundy::Bound::ComparatorTest < Test::Unit::TestCase
   time = 5.days.ago
   bound = Boundy::Bound.new(time)
 
@@ -28,7 +28,7 @@ class Boundy::Bound::ComparatorTest < ActiveSupport::TestCase
   end
 
   cases.each do |c|
-    test "##{c[:method]}_#{c[:truthiness]}" do
+    test "#{c[:method]}_#{c[:truthiness]}" do
       comp = Boundy::Bound::Comparator.new(bound, Boundy::Bound.new(c[:time]))
 
       assert_equal c[:expected], comp.method(c[:method]).call

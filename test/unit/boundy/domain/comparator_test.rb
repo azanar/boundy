@@ -4,7 +4,7 @@ require 'boundy/bound'
 require 'boundy/domain'
 require 'boundy/domain/comparator'
 
-class Boundy::Domain::ComparatorTest < ActiveSupport::TestCase
+class Boundy::Domain::ComparatorTest < Test::Unit::TestCase
   time = 5.days.ago
   test_bound = Boundy::Bound.new(time)
 
