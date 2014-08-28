@@ -14,3 +14,10 @@ I originally wrote Boundy for intersecting date ranges for reporting, but it sho
 [![Code Climate](https://codeclimate.com/github/azanar/boundy.png)](https://codeclimate.com/github/azanar/boundy)
 [![Coverage Status](https://coveralls.io/repos/azanar/boundy/badge.png?branch=master)](https://coveralls.io/r/azanar/boundy?branch=master)
 [![Dependency Status](https://gemnasium.com/azanar/boundy.png)](https://gemnasium.com/azanar/boundy)
+
+License
+-------
+
+&copy;2014 Ed Carrel. Released under the MIT license.
+
+See [License](LICENSE) for details.
