@@ -18,6 +18,6 @@ I originally wrote Boundy for intersecting date ranges for reporting, but it sho
 License
 -------
 
-&copy;2014 Ed Carrel. Released under the MIT license.
+&copy;2016 Ed Carrel. Released under the MIT license.
 
 See [License](LICENSE) for details.
